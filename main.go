@@ -84,6 +84,7 @@ func main(){
 	v1Router.Get("/healthz", handlerReady)
 	v1Router.Get("/err", handlerErr)
 	v1Router.Post("/users", apiCnfg.handlerCreateUser)
+	v1Router.Get("/users", apiCnfg.handlerGetUserByAPIKey)
 	router.Mount("/v1", v1Router)
 
 	log.Printf("Running on  Port %v", port );

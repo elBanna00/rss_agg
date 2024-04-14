@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/elBanna00/rss-agg/internal/auth"
 	"github.com/elBanna00/rss-agg/internal/database"
 	"github.com/google/uuid"
 )
 
-func (apiCnfg *apiConfig)handlerCreateUser(w http.ResponseWriter , r *http.Request){
+func (apiCnfg *apiConfig) handlerCreateUser(w http.ResponseWriter , r *http.Request){
 	type parameters struct {
 		Name string `json:"name"`
 	}
@@ -32,4 +33,20 @@ func (apiCnfg *apiConfig)handlerCreateUser(w http.ResponseWriter , r *http.Reque
 		return
 	}
 	respondWithJSON(w , 201 ,databaseUsertoUser(usr))
+}
+
+func (apiCnfg *apiConfig) handlerGetUserByAPIKey(w http.ResponseWriter , r *http.Request){
+	apikey, err := auth.GetApiKey(r.Header);
+	if err != nil {
+		respondWithError(w, 403, fmt.Sprintf("Auth Error: %v", err))
+		return
+	}
+
+	user, err := apiCnfg.DB.GetUserByAPIKey(r.Context(), apikey)
+	if err != nil {
+		respondWithError(w, 400 , fmt.Sprintf("Couldn't get user: %v" , err))
+		return
+	}
+	respondWithJSON(w,200 , databaseUsertoUser(user))
+
 }
