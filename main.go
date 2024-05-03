@@ -90,6 +90,10 @@ func main(){
 	v1Router.Get("/feeds", apiCnfg.handlerGetFeeds)
 
 	v1Router.Post("/followfeeds", apiCnfg.middlewareAuth(apiCnfg.handlerCreateFollowedFeed))
+
+	v1Router.Get("/followfeeds", apiCnfg.middlewareAuth(apiCnfg.handlerGetFollowedFeed))
+
+	v1Router.Delete("/followfeeds/{followedFeedID}", apiCnfg.middlewareAuth(apiCnfg.handlerDeleteFollowedFeed))
 	router.Mount("/v1", v1Router)
 
 	log.Printf("Running on  Port %v", port );
